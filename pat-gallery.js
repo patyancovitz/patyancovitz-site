@@ -7,7 +7,7 @@
       root.dataset.ready = 'true';
       var slides = Array.from(root.querySelectorAll('.pat-slide'));
       var track = root.querySelector('.pat-track');
-      var title = root.querySelector('[data-title]');
+      var title = root.querySelector('.slider-toolbar [data-title]');
       var count = root.querySelector('[data-count]');
       var index = 0, startX = null;
       function show(next) {
