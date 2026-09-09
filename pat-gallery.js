@@ -9,7 +9,12 @@
       var track = root.querySelector('.pat-track');
       var title = root.querySelector('.slider-toolbar [data-title]');
       var count = root.querySelector('[data-count]');
-      var index = 0, startX = null;
+      var index = 0, startX = null, autoplay = null;
+      function stopAutoplay() { if (autoplay) { window.clearInterval(autoplay); autoplay = null; } }
+      function startAutoplay() {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        stopAutoplay(); autoplay = window.setInterval(function () { show(index + 1); }, 6000);
+      }
       function show(next) {
         index = (next + slides.length) % slides.length;
         track.style.transform = 'translateX(-' + (index * 100) + '%)';
@@ -21,6 +26,11 @@
       root.querySelector('[data-prev]').addEventListener('click', function () { show(index - 1); });
       root.querySelector('[data-next]').addEventListener('click', function () { show(index + 1); });
       root.querySelector('.slider-controls').hidden = false;
+      root.addEventListener('pointerenter', stopAutoplay);
+      root.addEventListener('pointerleave', startAutoplay);
+      root.addEventListener('focusin', stopAutoplay);
+      root.addEventListener('focusout', startAutoplay);
+      startAutoplay();
       root.addEventListener('keydown', function (event) {
         if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
           event.preventDefault(); show(index + (event.key === 'ArrowRight' ? 1 : -1));
